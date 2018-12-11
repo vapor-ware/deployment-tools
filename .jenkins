@@ -20,5 +20,15 @@ pipeline {
         }
       }
     }
+    stage('Publish') {
+      when {
+        branch 'master'
+      }
+      steps {
+        docker.withRegistry( ‘’, registryCredential ) {
+          dockerImage.push()
+        }
+      }
+    }
   }
 }
