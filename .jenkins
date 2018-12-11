@@ -25,7 +25,9 @@ pipeline {
       }
       steps {
         withDockerRegistry(registry: [credentialsId: 'vio-docker-hub']) {
-          sh 'docker push ${registry}'
+          sh 'docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest'
+          sh 'docker push ${registry}:${BUILD_NUMBER}'
+          sh 'docker push ${registry}:latest'
         }
       }
     }
