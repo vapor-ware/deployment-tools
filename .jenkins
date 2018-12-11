@@ -3,7 +3,7 @@ pipeline {
   agent any
 
   environment {
-    registry = "vaporio/deployment_tools"
+    registry = "vaporio/deployment-tools"
   }
 
   stages {
