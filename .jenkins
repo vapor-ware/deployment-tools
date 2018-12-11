@@ -1,0 +1,23 @@
+pipeline {
+
+  agent any
+
+  environment {
+    registry = "vaporio/deployment_tools"
+    registryCredential = "vio-docker-hub"
+  }
+
+  stages {
+	stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage('Build') {
+      steps {
+        script {
+          docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+}
