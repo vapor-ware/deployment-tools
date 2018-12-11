@@ -4,7 +4,6 @@ pipeline {
 
   environment {
     registry = "vaporio/deployment_tools"
-    registryCredential = "vio-docker-hub"
   }
 
   stages {
@@ -25,8 +24,8 @@ pipeline {
         branch 'master'
       }
       steps {
-        docker.withRegistry( ‘’, registryCredential ) {
-          dockerImage.push()
+        withDockerRegistry(registry: [credentialsId: 'vio-docker-hub']) {
+          sh 'docker push ${registry}'
         }
       }
     }
