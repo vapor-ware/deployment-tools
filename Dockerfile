@@ -29,7 +29,7 @@ ADD https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}
 
 WORKDIR /tmp
 # Thid party package management, wish they had up-to-date apt packages.
-RUN adduser --system deploy \
+RUN adduser deploy \
     && apt-get update \
     && apt-get install -y python unzip curl \
     && unzip terraform_${TF_VERSION}.zip \
@@ -54,5 +54,3 @@ WORKDIR /home/deploy
 RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image
-
-VOLUME ["/home/deploy/.config", "/home/deploy/.kube"]
