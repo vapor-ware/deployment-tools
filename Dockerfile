@@ -30,7 +30,7 @@ ADD https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}
 
 WORKDIR /tmp
 # Thid party package management, wish they had up-to-date apt packages.
-RUN adduser deploy \
+RUN adduser deploy --system \
     && apt-get update \
     && apt-get install -y python unzip curl \
     && unzip terraform_${TF_VERSION}.zip \
