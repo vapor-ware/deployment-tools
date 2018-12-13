@@ -17,6 +17,7 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 # We'll need to test this in CI to determine if we can get
 # away with CI ROLE scopes.
 ENV GOOGLE_CREDENTIALS="/home/deploy/gce.json"
+ENV HOME="/home/deploy"
 
 # Add terraform
 ADD https://releases.hashicorp.com/terraform/${TF_SEMVER}/terraform_${TF_VERSION}.zip /tmp
