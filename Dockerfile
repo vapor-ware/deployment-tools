@@ -1,16 +1,16 @@
-# 
+#
 # Usage: docker run -ti --rm --volume $(pwd)/assets/config:/home/deploy/.config gstf:latest gsutil
-# 
+#
 
 FROM vaporio/foundation:latest
 
 LABEL maintainer "Chuck B <chuck@vapor.io>"
 
-ARG TF_SEMVER=0.11.10
+ARG TF_SEMVER=0.11.11
 ARG TF_VERSION=${TF_SEMVER}_linux_amd64
 ARG CLOUD_SDK_VERSION=227.0.0
 ARG HELM_VERSION=v2.12.0
-ARG KUBECTL_VERSION=v1.13.0
+ARG KUBECTL_VERSION=v1.13.1
 
 ENV PATH /google-cloud-sdk/bin:$PATH
 # This is a fake path and may need to be volume mapped in.
