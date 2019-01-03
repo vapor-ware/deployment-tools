@@ -1,6 +1,6 @@
-# 
+#
 # Usage: docker run -ti --rm --volume $(pwd)/assets/config:/home/deploy/.config gstf:latest gsutil
-# 
+#
 
 FROM vaporio/foundation:latest
 
@@ -43,9 +43,10 @@ RUN adduser deploy --system --uid 112 \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && install linux-amd64/helm /usr/local/bin/helm \
     && helm version -c \
+    && helm init --client-only \
     && install kubectl /usr/local/bin/kubectl \
     && kubectl version --client \
-    && rm -rf /tmp/* /var/lib/apt/cache/*
+    && rm -rf /tmp/* /var/lib/apt/cache/* \
 
 
 USER deploy
