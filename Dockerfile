@@ -43,7 +43,6 @@ RUN adduser deploy --system --uid 112 \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && install linux-amd64/helm /usr/local/bin/helm \
     && helm version -c \
-    && helm init --client-only \
     && install kubectl /usr/local/bin/kubectl \
     && kubectl version --client \
     && rm -rf /tmp/* /var/lib/apt/cache/*
@@ -55,4 +54,6 @@ WORKDIR /home/deploy
 # Tune gcloud to not be all uppity about reporting on our containers actions
 RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set component_manager/disable_update_check true && \
-    gcloud config set metrics/environment github_docker_image
+    gcloud config set metrics/environment github_docker_image && \
+    helm init --client-only
+
