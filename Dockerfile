@@ -46,7 +46,7 @@ RUN adduser deploy --system --uid 112 \
     && helm init --client-only \
     && install kubectl /usr/local/bin/kubectl \
     && kubectl version --client \
-    && rm -rf /tmp/* /var/lib/apt/cache/* \
+    && rm -rf /tmp/* /var/lib/apt/cache/*
 
 
 USER deploy
