@@ -8,9 +8,10 @@ LABEL maintainer "Chuck B <chuck@vapor.io>"
 
 ARG TF_SEMVER=0.11.11
 ARG TF_VERSION=${TF_SEMVER}_linux_amd64
-ARG CLOUD_SDK_VERSION=227.0.0
-ARG HELM_VERSION=v2.12.1
+ARG CLOUD_SDK_VERSION=231.0.0
+ARG HELM_VERSION=v2.12.3
 ARG KUBECTL_VERSION=v1.13.1
+ARG HELMFILE_VERSION=v0.43.1
 
 ENV PATH /google-cloud-sdk/bin:$PATH
 # This is a fake path and may need to be volume mapped in.
@@ -27,6 +28,8 @@ ADD https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-
 ADD https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz /tmp
 # Add kubectl
 ADD https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl /tmp
+# Add helmfile
+ADD https://github.com/roboll/helmfile/releases/download/${HELMFILE_VERSION}/helmfile_linux_amd64 /tmp
 
 WORKDIR /tmp
 # Thid party package management, wish they had up-to-date apt packages.
@@ -42,6 +45,7 @@ RUN adduser deploy --system --uid 112 \
     && mv google-cloud-sdk /google-cloud-sdk \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && install linux-amd64/helm /usr/local/bin/helm \
+    && install helmfile_linux_amd64 /usr/local/bin/helmfile \
     && helm version -c \
     && install kubectl /usr/local/bin/kubectl \
     && kubectl version --client \
