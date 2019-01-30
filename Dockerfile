@@ -48,8 +48,6 @@ RUN adduser deploy --system --uid 112 \
     && install linux-amd64/helm /usr/local/bin/helm \
     && install helmfile_linux_amd64 /usr/local/bin/helmfile \
     && helm version -c \
-    && helm init --client-only \
-    && helm plugin install https://github.com/databus23/helm-diff \
     && install kubectl /usr/local/bin/kubectl \
     && kubectl version --client \
     && rm -rf /tmp/* /var/lib/apt/cache/*
@@ -62,5 +60,6 @@ WORKDIR /home/deploy
 RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image && \
-    helm init --client-only
+    helm init --client-only && \
+    helm plugin install https://github.com/databus23/helm-diff
 
