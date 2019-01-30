@@ -11,7 +11,7 @@ ARG TF_VERSION=${TF_SEMVER}_linux_amd64
 ARG CLOUD_SDK_VERSION=231.0.0
 ARG HELM_VERSION=v2.12.3
 ARG KUBECTL_VERSION=v1.13.1
-ARG HELMFILE_VERSION=v0.43.1
+ARG HELMFILE_VERSION=v0.43.2
 
 ENV PATH /google-cloud-sdk/bin:$PATH
 # This is a fake path and may need to be volume mapped in.
@@ -19,6 +19,7 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 # away with CI ROLE scopes.
 ENV GOOGLE_CREDENTIALS="/home/deploy/gce.json"
 ENV HOME="/home/deploy"
+ENV HELM_HOME="/home/deploy/.helm"
 
 # Add terraform
 ADD https://releases.hashicorp.com/terraform/${TF_SEMVER}/terraform_${TF_VERSION}.zip /tmp
@@ -35,7 +36,7 @@ WORKDIR /tmp
 # Thid party package management, wish they had up-to-date apt packages.
 RUN adduser deploy --system --uid 112 \
     && apt-get update \
-    && apt-get install -y python unzip curl \
+    && apt-get install -y python unzip curl git \
     && unzip terraform_${TF_VERSION}.zip \
     && install terraform /usr/local/bin/terraform \
     && terraform --version  \
@@ -47,6 +48,8 @@ RUN adduser deploy --system --uid 112 \
     && install linux-amd64/helm /usr/local/bin/helm \
     && install helmfile_linux_amd64 /usr/local/bin/helmfile \
     && helm version -c \
+    && helm init --client-only \
+    && helm plugin install https://github.com/databus23/helm-diff \
     && install kubectl /usr/local/bin/kubectl \
     && kubectl version --client \
     && rm -rf /tmp/* /var/lib/apt/cache/*
