@@ -11,7 +11,7 @@ ARG TF_VERSION=${TF_SEMVER}_linux_amd64
 ARG CLOUD_SDK_VERSION=231.0.0
 ARG HELM_VERSION=v2.12.3
 ARG KUBECTL_VERSION=v1.13.1
-ARG HELMFILE_VERSION=v0.43.2
+ARG HELMFILE_VERSION=v0.45.3
 
 ENV PATH /google-cloud-sdk/bin:$PATH
 # This is a fake path and may need to be volume mapped in.
