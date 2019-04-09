@@ -6,7 +6,7 @@ FROM vaporio/foundation:latest
 
 LABEL maintainer "Chuck B <chuck@vapor.io>"
 
-ARG TF_SEMVER=0.11.11
+ARG TF_SEMVER=0.11.13
 ARG TF_VERSION=${TF_SEMVER}_linux_amd64
 ARG CLOUD_SDK_VERSION=236.0.0
 ARG HELM_VERSION=v2.13.0
