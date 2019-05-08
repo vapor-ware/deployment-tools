@@ -140,8 +140,11 @@ ENV SSH_AGENT_CONFIG=/var/tmp/.ssh-agent
 ENV XDG_CONFIG_HOME=/etc
 
 # Clean up file modes for scripts
+# Note: 117 group is for jenkins/CI
 RUN find ${XDG_CONFIG_HOME} -type f -name '*.sh' -exec chmod 755 {} \; \
-    && chown -R neo /conf
+    && chown -R neo /conf \
+    && chgrp -R 117 /conf/.helm \
+    && chmod -R 775 /conf/.helm
 
 COPY rootfs /
 
