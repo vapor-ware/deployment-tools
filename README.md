@@ -1,71 +1,55 @@
 # Deployment Tools
 
-## What's this?
+## What's Deployment Tools?
 
-The range of tooling we need to perform cloud deployments at vapor, in a
-consistent, homogeneous environment. What will you find in here?
-
-- Google Cloud SDK
-- Helm
-- Terraform
+Deployment Tools provide a homegenoous environment to execute, develop, and test
+your infrastructure as code. Whether in CI or on your Laptop.
 
 
-In order to tweak the versions installed, they are exposed as simple ARG's with
-sane defaults at the time of writing.
+### Whats in the box?
 
+Core Tooling
 
-```shell
-docker build -t vaporio/deployment-tools --build-arg HELM_VERSION=v12.1.0 .
+ - Kubectl
+ - Terraform
+ - GoogleSDK
+ - Helm
+ - Helmfile
+
+Helm Plugins
+
+- Helm Diff
+- Helm Git
+- Helm Edit
+- Helm Secrets
+- Helm S3
+
+Remote Filesystems
+
+- fuse / gcsfuse for remote persistent state.
+  *note* this requires `--privilged` on most systems.
+
+Nice to haves
+
+- KTX
+
+## Usage
+
+Basic usage example:
+
+To use this container as a shell, launch the container with a few convention arguments:
+
+```
+    docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest -c build-info
 ```
 
-## Use as a local runtime
-
-This container not only warehouses our tooling for CI based deployments, but
-also may be used as a local homogeneous environment. 
+in order to launch a shell simply:
 
 ```
-docker run --rm -ti -v $HOME/.config:/home/deploy/.config vaporio/deployment-tools:latest
+    docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest /bin/bash
 ```
 
-## Credentials
+All your files in $HOME will be volume mapped into the container as `/localhost`
+by convention.
 
-### When being used as a repl
-
-Terraform will by read from the environment variable `GOOGLE_CREDENTIALS`. This
-can be mapped in using your service account json file:
-
-```console
-docker run -ti -v $HOME/gce.json:/home/deploy/.gce.json -e GOOGLE_CREDENTIALS=/home/deploy/gce.json vaporio/deployment-tools:latest
-```
-
-### When being used in CI
-
-Credentials should be enlisted into jenkins as a base64 encoded secret file. This
-makes the management straight forward. consider the following snippet:
-
-```json
-  environment {
-    SVC_ACCOUNT_KEY = credentials('terraform-gce-credential')
-  }
-  stage('Terraform') {
-    agent {
-      docker { 
-        image 'vaporio/deployment-tools:latest'
-        args '-v ${SVC_ACCOUNT_KEY}:/home/deploy/gce.json'
-      }
-    }
-    steps {
-      dir('cloud/dev') {
-        sh 'terraform init'
-        sh 'terraform validate'
-        sh 'terraform plan'
-      }
-    }
-  }
-```
-
-
-## Who to contact in case of issues
-
-You can reach out to chuck at vapor dot io in the event of issues with this image.
 
