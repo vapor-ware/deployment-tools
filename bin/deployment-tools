@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ -z "${DEPLOYMENT_TOOLS_IMAGE}" ]; then
+  export DEPLOYMENT_TOOLS_IMAGE="vaporio/deployment-tools:latest"
+fi
+
+docker pull $DEPLOYMENT_TOOLS_IMAGE
+
+docker run --rm -ti --cap-add SYS_ADMIN --device /dev/fuse --privileged \
+    --hostname deployment -v $HOME:/localhost ${deployment-tools_IMAGE} "$@"

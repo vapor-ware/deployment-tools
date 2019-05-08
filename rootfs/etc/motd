@@ -1,0 +1,21 @@
+     _            _               _              _
+  __| | ___ _ __ | | ___  _   _  | |_ ___   ___ | |___
+ / _` |/ _ \ '_ \| |/ _ \| | | | | __/ _ \ / _ \| / __|
+| (_| |  __/ |_) | | (_) | |_| | | || (_) | (_) | \__ \
+ \__,_|\___| .__/|_|\___/ \__, |  \__\___/ \___/|_|___/
+           |_|            |___/
+
+| Code    | gh:vapor-ware/deployment-tools      | Check out documention          |
+| Support | cloud-ops@vapor.io                  | Get help fast from the experts |
+
+Basic usage example:
+
+To use this container as a shell, launch the container with a few convention arguments:
+
+    docker run -ti --rm -v $HOME:/localhost --privileged local/deployment-tools:latest
+
+This will print out the build details by default. in order to launch a shell simply
+pass the shell as an argument.
+
+    docker run -ti --rm -v $HOME:/localhost --privileged local/deployment-tools:latest -c /bin/bash
+

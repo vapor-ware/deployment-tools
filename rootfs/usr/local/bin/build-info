@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Load our color wrapper
+. /etc/profile.d/_colors.sh
+
+cat /etc/motd
+
+echo -e "Core Tooling"
+echo -e "-------------"
+echo -e "Kubectl          :  '$(green $KUBECTL_VERSION)'"
+echo -e "Terraform        :  '$(green $TF_VERSION)'"
+echo -e "GoogleSDK        :  '$(green $CLOUD_SDK_VERSION)'"
+echo -e "RKE              :  '$(green $RKE_VERSION)'"
+
+echo -e ""
+echo -e "Release Automation"
+echo -e "-------------"
+echo -e "Helm             :   '$(green $HELM_VERSION)'"
+echo -e "Helmfile         :   '$(green $HELMFILE_VERSION)'"
+echo -e ""
+echo -e "Helm Plugins"
+echo -e "-------------"
+echo -e "Helm Diff        :   '$(green $HELM_DIFF_VERSION)'"
+echo -e "Helm Git         :   '$(green $HELM_GIT_VERSION)'"
+echo -e "Helm Secrets     :   '$(green $HELM_SECRETS_VERSION)'"
+echo -e "Helm S3          :   '$(green $HELM_S3_VERSION)'"

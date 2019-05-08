@@ -1,0 +1,9 @@
+#!/bin/bash 
+
+set -e
+
+if [ -z "$1" || -z "$2" ]; then
+    echo -e "-> Run '$(red gcs my-bucket /path/to/mount)' to use this command"
+fi
+
+gcsfuse $1 $2
