@@ -141,10 +141,12 @@ ENV XDG_CONFIG_HOME=/etc
 
 # Clean up file modes for scripts
 # Note: 117 group is for jenkins/CI
+# 777 for localhost is to let Ci create file paths as needed.
 RUN find ${XDG_CONFIG_HOME} -type f -name '*.sh' -exec chmod 755 {} \; \
     && chown -R neo /conf \
     && chgrp -R 117 /conf/.helm \
-    && chmod -R 775 /conf/.helm
+    && chmod -R 775 /conf/.helm \
+    && chmod -R 777 /localhost
 
 COPY rootfs /
 
