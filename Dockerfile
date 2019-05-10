@@ -12,7 +12,7 @@ ENV KUBECTL_VERSION=v1.13.1
 ENV HELMFILE_VERSION=v0.47.0
 ENV RKE_VERSION=v0.2.0
 ENV VELERO_VERSION=v0.11.0
-ENV SCTL_VERSION=0.3.3
+ENV SCTL_VERSION=0.3.4
 
 # Add terraform
 ADD https://releases.hashicorp.com/terraform/${TF_SEMVER}/terraform_${TF_VERSION}.zip /tmp
