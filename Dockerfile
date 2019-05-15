@@ -58,6 +58,8 @@ RUN apt-get update && \
     curl  \
     bash-completion \
     direnv \
+    rsync \
+    wget \
 # Install the GCS Fuse package to mount remote storage
     && echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
