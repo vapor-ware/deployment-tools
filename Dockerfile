@@ -4,13 +4,12 @@ FROM vaporio/foundation:latest
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
 #
 
-ARG TF_SEMVER=0.11.13
+ARG TF_SEMVER=0.12.0
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
 ENV CLOUD_SDK_VERSION=240.0.0
-ENV HELM_VERSION=v2.13.1
-ENV KUBECTL_VERSION=v1.13.1
-ENV HELMFILE_VERSION=v0.47.0
-ENV RKE_VERSION=v0.2.0
+ENV HELM_VERSION=v2.14.0
+ENV KUBECTL_VERSION=v1.14.1
+ENV HELMFILE_VERSION=v0.63.2
 ENV VELERO_VERSION=v0.11.0
 ENV SCTL_VERSION=0.3.4
 
@@ -24,8 +23,6 @@ ADD https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-am
 ADD https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl /tmp
 # Add helmfile
 ADD https://github.com/roboll/helmfile/releases/download/${HELMFILE_VERSION}/helmfile_linux_amd64 /tmp
-# Add RKE
-ADD https://github.com/rancher/rke/releases/download/${RKE_VERSION}/rke_linux-amd64 /tmp
 # Add Velero
 ADD https://github.com/heptio/velero/releases/download/${VELERO_VERSION}/velero-${VELERO_VERSION}-linux-amd64.tar.gz /tmp
 # Add Sctl
@@ -73,7 +70,6 @@ WORKDIR /tmp
 RUN adduser neo --home /conf -q \
     && unzip terraform_${TF_VERSION}.zip \
     && install terraform /usr/bin/terraform \
-    && install rke_linux-amd64 /usr/local/bin/rke \
     && tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
     && rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
     && tar xzvf velero-${VELERO_VERSION}-linux-amd64.tar.gz \
@@ -107,14 +103,10 @@ RUN chmod 755 /usr/bin/ktx
 
 ENV HELM_DIFF_VERSION 2.11.0+2
 ENV HELM_GIT_VERSION 0.3.0
-ENV HELM_SECRETS_VERSION 1.3.2
-ENV HELM_S3_VERSION 0.7.0
 
 RUN helm init --client-only \
     && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
-    && helm plugin install https://github.com/lazypower/helm-secrets --version ${HELM_SECRETS_VERSION} \
-    && helm plugin install https://github.com/aslafy-z/helm-git.git --version ${HELM_GIT_VERSION} \
-    && helm plugin install https://github.com/hypnoglow/helm-s3 --version v${HELM_S3_VERSION}
+    && helm plugin install https://github.com/aslafy-z/helm-git.git --version ${HELM_GIT_VERSION}
 
 #
 # Install fancy Kube PS1 Prompt
