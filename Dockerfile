@@ -4,7 +4,7 @@ FROM vaporio/foundation:latest
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
 #
 
-ARG TF_SEMVER=0.12.0
+ARG TF_SEMVER=0.12.1
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
 ENV CLOUD_SDK_VERSION=240.0.0
 ENV HELM_VERSION=v2.14.0
@@ -91,6 +91,10 @@ RUN adduser neo --home /conf -q \
 
 RUN kubectl completion bash > /etc/bash_completion.d/kubectl.sh
 ENV KUBECTX_COMPLETION_VERSION 0.6.2
+ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/kubens /usr/local/bin/kubens
+ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/kubectx /usr/local/bin/kubectx
+
+
 ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens.sh
 ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx.sh
 
