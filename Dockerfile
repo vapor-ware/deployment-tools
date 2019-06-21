@@ -4,14 +4,14 @@ FROM vaporio/foundation:latest
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
 #
 
-ARG TF_SEMVER=0.12.1
+ARG TF_SEMVER=0.12.2
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
-ENV CLOUD_SDK_VERSION=240.0.0
-ENV HELM_VERSION=v2.14.0
-ENV KUBECTL_VERSION=v1.14.1
-ENV HELMFILE_VERSION=v0.63.2
-ENV VELERO_VERSION=v0.11.0
-ENV SCTL_VERSION=0.3.4
+ENV CLOUD_SDK_VERSION=251.0.0
+ENV HELM_VERSION=v2.14.1
+ENV KUBECTL_VERSION=v1.15.0
+ENV HELMFILE_VERSION=v0.79.1
+ENV VELERO_VERSION=v1.0.0
+ENV SCTL_VERSION=0.6.1
 
 # Add terraform
 ADD https://releases.hashicorp.com/terraform/${TF_SEMVER}/terraform_${TF_VERSION}.zip /tmp
@@ -73,6 +73,7 @@ RUN adduser neo --home /conf -q \
     && tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
     && rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
     && tar xzvf velero-${VELERO_VERSION}-linux-amd64.tar.gz \
+    && mv velero-${VELERO_VERSION}-linux-amd64/velero . \
     && rm velero-${VELERO_VERSION}-linux-amd64.tar.gz \
     && tar xzvf sctl_${SCTL_VERSION}_Linux_x86_64.tar.gz  \
     && ln -s /lib /lib64 \
