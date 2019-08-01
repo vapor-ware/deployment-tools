@@ -12,6 +12,8 @@ ENV KUBECTL_VERSION=v1.15.0
 ENV HELMFILE_VERSION=v0.80.1
 ENV VELERO_VERSION=v1.0.0
 ENV SCTL_VERSION=0.8.2
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
 # Add terraform
 ADD https://releases.hashicorp.com/terraform/${TF_SEMVER}/terraform_${TF_VERSION}.zip /tmp
@@ -51,6 +53,9 @@ RUN apt-get update && \
     sshpass \
     gpg-agent \
     python \
+    python3-yaml \
+    python3-click \
+    python3-requests \
     unzip \
     curl  \
     bash-completion \
@@ -68,6 +73,8 @@ COPY rootfs/etc/skel/bashrc /etc/skel/.bashrc
 WORKDIR /tmp
 # Thid party package management, wish they had up-to-date apt packages.
 RUN adduser neo --home /conf -q \
+    && adduser jenkins --home /home/jenkins -q \
+    && usermod -aG jenkins neo \
     && unzip terraform_${TF_VERSION}.zip \
     && install terraform /usr/bin/terraform \
     && tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
@@ -106,12 +113,22 @@ ADD https://raw.githubusercontent.com/heptiolabs/ktx/${KTX_VERSION}/ktx /usr/bin
 ADD https://raw.githubusercontent.com/heptiolabs/ktx/master/ktx-completion.sh /etc/bash_completion.d/ktx-completion.sh
 RUN chmod 755 /usr/bin/ktx
 
-ENV HELM_DIFF_VERSION 2.11.0+2
+ENV HELM_DIFF_VERSION 2.11.0+5
 ENV HELM_GIT_VERSION 0.3.0
 
 RUN helm init --client-only \
     && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
     && helm plugin install https://github.com/aslafy-z/helm-git.git --version ${HELM_GIT_VERSION}
+
+#
+# Init Helm for CI deployment-runner
+#
+ENV HOME=/home/jenkins
+RUN mkdir -p /home/jenkins/agent-workspace \
+    && helm init --client-only \
+    && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION}
+ENV HOME=/conf
+
 
 #
 # Install fancy Kube PS1 Prompt
@@ -142,10 +159,13 @@ ENV XDG_CONFIG_HOME=/etc
 # Note: 117 group is for jenkins/CI
 # 777 for localhost is to let Ci create file paths as needed.
 RUN find ${XDG_CONFIG_HOME} -type f -name '*.sh' -exec chmod 755 {} \; \
+    && chown -R neo:jenkins /home/jenkins \
     && chown -R neo /conf \
     && chgrp -R 117 /conf/.helm \
     && chmod -R 775 /conf/.helm \
-    && chmod -R 777 /localhost
+    && chmod -R 777 /localhost \
+    && rm -rf /tmp/* \
+    && chmod 777 /tmp
 
 COPY rootfs /
 
