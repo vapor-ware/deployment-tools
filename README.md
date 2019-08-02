@@ -40,7 +40,7 @@ Basic usage example:
 To use this container as a shell, launch the container with a few convention arguments:
 
 ```
-    docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest -c build-info
+    docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest build-info
 ```
 
 in order to launch a shell simply:
