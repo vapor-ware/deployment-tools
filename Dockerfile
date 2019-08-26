@@ -4,12 +4,12 @@ FROM vaporio/foundation:latest
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
 #
 
-ARG TF_SEMVER=0.12.6
+ARG TF_SEMVER=0.12.7
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
-ENV CLOUD_SDK_VERSION=258.0.0
+ENV CLOUD_SDK_VERSION=259.0.0
 ENV HELM_VERSION=v2.14.3
 ENV KUBECTL_VERSION=v1.15.0
-ENV HELMFILE_VERSION=v0.80.2
+ENV HELMFILE_VERSION=v0.81.3
 ENV VELERO_VERSION=v1.0.0
 ENV SCTL_VERSION=1.0.0-rc2
 ENV LC_ALL=C.UTF-8
@@ -98,7 +98,7 @@ RUN adduser neo --home /conf -q \
 # ln -s /usr/local/google-cloud-sdk/completion.bash.inc /etc/bash_completion.d/gcloud.sh && \
 
 RUN kubectl completion bash > /etc/bash_completion.d/kubectl.sh
-ENV KUBECTX_COMPLETION_VERSION 0.6.2
+ENV KUBECTX_COMPLETION_VERSION 0.6.3
 ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/kubens /usr/local/bin/kubens
 ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/kubectx /usr/local/bin/kubectx
 
