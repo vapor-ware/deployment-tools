@@ -106,13 +106,6 @@ ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSI
 ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/completion/kubens.bash /etc/bash_completion.d/kubens.sh
 ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx.sh
 
-ENV KTX_VERSION master
-
-# Install KTX quick kube context switcher
-ADD https://raw.githubusercontent.com/heptiolabs/ktx/${KTX_VERSION}/ktx /usr/bin/ktx
-ADD https://raw.githubusercontent.com/heptiolabs/ktx/master/ktx-completion.sh /etc/bash_completion.d/ktx-completion.sh
-RUN chmod 755 /usr/bin/ktx
-
 ENV HELM_DIFF_VERSION 2.11.0+5
 ENV HELM_GIT_VERSION 0.3.0
 
