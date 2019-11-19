@@ -118,6 +118,14 @@ fi
 
 . /etc/profile
 
+# Detect if we should even set a default KUBECONFIG
+if [ -f /localhost/.kube/config ]; then
+    export KUBECONFIG=/localhost/.kube/config
+    export KUBECONFIG_DIR=/localhost/.kube/
+fi
+
+
+
 # Convenience function to set kube config
 ktx() {
     if [ ! -d "/localhost/.kube" ]; then

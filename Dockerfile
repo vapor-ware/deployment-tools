@@ -33,8 +33,6 @@ ADD https://github.com/vapor-ware/sctl/releases/download/${SCTL_VERSION}/sctl_${
 ENV HOME=/conf
 ENV CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 ENV GOOGLE_APPLICATION_CREDENTIALS=/localhost/.config/gcloud/application_default_credentials.json
-ENV KUBECONFIG=/localhost/.kube/config
-ENV KUBECONFIG_DIR=/localhost/.kube/
 
 # Basics and system tools
 RUN apt-get update && \
