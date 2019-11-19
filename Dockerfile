@@ -4,14 +4,14 @@ FROM vaporio/foundation:latest
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
 #
 
-ARG TF_SEMVER=0.12.12
+ARG TF_SEMVER=0.12.16
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
-ENV CLOUD_SDK_VERSION=267.0.0
-ENV HELM_VERSION=v2.15.1
-ENV KUBECTL_VERSION=v1.16.0
-ENV HELMFILE_VERSION=v0.87.0
+ENV CLOUD_SDK_VERSION=270.0.0
+ENV HELM_VERSION=v2.16.1
+ENV KUBECTL_VERSION=v1.16.2
+ENV HELMFILE_VERSION=v0.92.1
 ENV VELERO_VERSION=v1.1.0
-ENV SCTL_VERSION=1.0.0-rc6
+ENV SCTL_VERSION=1.2.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
@@ -33,8 +33,6 @@ ADD https://github.com/vapor-ware/sctl/releases/download/${SCTL_VERSION}/sctl_${
 ENV HOME=/conf
 ENV CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 ENV GOOGLE_APPLICATION_CREDENTIALS=/localhost/.config/gcloud/application_default_credentials.json
-ENV KUBECONFIG=/localhost/.kube/config
-ENV KUBECONFIG_DIR=/localhost/.kube/
 
 # Basics and system tools
 RUN apt-get update && \
