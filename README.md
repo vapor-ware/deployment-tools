@@ -15,6 +15,8 @@ Core Tooling
  - GoogleSDK
  - Helm
  - Helmfile
+ - sctl
+ - Rancher CLI
 
 Helm Plugins
 
@@ -40,16 +42,14 @@ Basic usage example:
 To use this container as a shell, launch the container with a few convention arguments:
 
 ```
-    docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest build-info
+docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest build-info
 ```
 
 in order to launch a shell simply:
 
 ```
-    docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest /bin/bash
+docker run -ti --rm -v $HOME:/localhost --privileged vaporio/deployment-tools:latest /bin/bash
 ```
 
-All your files in $HOME will be volume mapped into the container as `/localhost`
+All your files in `$HOME` will be volume mapped into the container as `/localhost`
 by convention.
-
-
