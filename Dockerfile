@@ -13,6 +13,7 @@ ENV HELMFILE_VERSION=v0.116.0
 ENV VELERO_VERSION=v1.3.2
 ENV SCTL_VERSION=1.4.0
 ENV RANCHER_CLI_VERSION=v2.4.3
+ENV CHARTRELEASER_VERSION=0.1.1
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
@@ -32,6 +33,8 @@ ADD https://github.com/heptio/velero/releases/download/${VELERO_VERSION}/velero-
 ADD https://github.com/vapor-ware/sctl/releases/download/${SCTL_VERSION}/sctl_${SCTL_VERSION}_Linux_x86_64.tar.gz /tmp
 # Add rancher-cli
 ADD https://github.com/rancher/cli/releases/download/${RANCHER_CLI_VERSION}/rancher-linux-amd64-${RANCHER_CLI_VERSION}.tar.gz /tmp
+# Add chart-releaser
+ADD https://github.com/edaniszewski/chart-releaser/releases/download/${CHARTRELEASER_VERSION}/chart-releaser_linux_amd64.tar.gz /tmp
 
 ENV HOME=/conf
 ENV CLOUDSDK_CONFIG=/localhost/.config/gcloud/
@@ -85,6 +88,7 @@ RUN adduser neo --home /conf -q \
     && rm velero-${VELERO_VERSION}-linux-amd64.tar.gz \
     && tar xzvf sctl_${SCTL_VERSION}_Linux_x86_64.tar.gz  \
     && tar xzvf rancher-linux-amd64-${RANCHER_CLI_VERSION}.tar.gz \
+    && tar xzvf chart-releaser_linux_amd64.tar.gz \
     && ln -s /lib /lib64 \
     && mv google-cloud-sdk /google-cloud-sdk \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
@@ -94,6 +98,7 @@ RUN adduser neo --home /conf -q \
     && install velero /usr/bin/velero \
     && install sctl /usr/bin/sctl \
     && install rancher-${RANCHER_CLI_VERSION}/rancher /usr/bin/rancher \
+    && install chart-releaser /usr/bin/chart-releaser \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
