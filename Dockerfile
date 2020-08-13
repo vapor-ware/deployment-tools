@@ -8,6 +8,7 @@ ARG TF_SEMVER=0.12.25
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
 ENV CLOUD_SDK_VERSION=292.0.0
 ENV HELM_VERSION=v2.16.7
+ENV HELM3_VERSION=v3.3.0
 ENV KUBECTL_VERSION=v1.18.2
 ENV HELMFILE_VERSION=v0.125.0
 ENV VELERO_VERSION=v1.3.2
@@ -23,6 +24,8 @@ ADD https://releases.hashicorp.com/terraform/${TF_SEMVER}/terraform_${TF_VERSION
 ADD https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz /tmp
 # Add helm
 ADD https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz /tmp
+# Add helm3
+ADD https://get.helm.sh/helm-${HELM3_VERSION}-linux-amd64.tar.gz /tmp
 # Add kubectl
 ADD https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl /tmp
 # Add helmfile
@@ -92,7 +95,10 @@ RUN adduser neo --home /conf -q \
     && ln -s /lib /lib64 \
     && mv google-cloud-sdk /google-cloud-sdk \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
+    && mkdir -p helm3 \
+    && tar xzvf helm-${HELM3_VERSION}-linux-amd64.tar.gz -C helm3 \
     && install linux-amd64/helm /usr/bin/helm \
+    && install helm3/linux-amd64/helm /usr/bin/helm3 \
     && install helmfile_linux_amd64 /usr/bin/helmfile \
     && install kubectl /usr/bin/kubectl \
     && install velero /usr/bin/velero \
@@ -115,11 +121,10 @@ ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSI
 ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSION}/completion/kubectx.bash /etc/bash_completion.d/kubectx.sh
 
 ENV HELM_DIFF_VERSION 2.11.0+5
-ENV HELM_GIT_VERSION 0.3.0
 
 RUN helm init --client-only \
     && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
-    && helm plugin install https://github.com/aslafy-z/helm-git.git --version ${HELM_GIT_VERSION}
+    && helm3 plugin install https://github.com/databus23/helm-diff
 
 #
 # Init Helm for CI deployment-runner
@@ -127,13 +132,13 @@ RUN helm init --client-only \
 ENV HOME=/home/jenkins
 RUN mkdir -p /home/jenkins/agent-workspace \
     && helm init --client-only \
-    && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION}
-ENV HOME=/conf
-
+    && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
+    && helm3 plugin install https://github.com/databus23/helm-diff
 
 #
 # Install fancy Kube PS1 Prompt
 #
+ENV HOME=/conf
 ENV KUBE_PS1_VERSION v0.7.0
 ADD https://raw.githubusercontent.com/jonmosco/kube-ps1/${KUBE_PS1_VERSION}/kube-ps1.sh /etc/profile.d/kube-ps1.sh
 
