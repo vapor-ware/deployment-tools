@@ -95,7 +95,9 @@ RUN adduser neo --home /conf -q \
     && ln -s /lib /lib64 \
     && mv google-cloud-sdk /google-cloud-sdk \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
-    && mkdir -p helm3 \
+    && mkdir -p helm3 /etc/helm \
+    && chmod 775 /etc/helm \
+    && chgrp jenkins /etc/helm \
     && tar xzvf helm-${HELM3_VERSION}-linux-amd64.tar.gz -C helm3 \
     && install linux-amd64/helm /usr/bin/helm \
     && install helm3/linux-amd64/helm /usr/bin/helm3 \
