@@ -4,7 +4,7 @@ FROM vaporio/foundation:latest
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
 #
 
-ARG TF_SEMVER=0.12.25
+ARG TF_SEMVER=0.12.29
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
 ENV CLOUD_SDK_VERSION=292.0.0
 ENV HELM_VERSION=v2.16.7
