@@ -16,6 +16,7 @@ ENV SCTL_VERSION=1.4.2
 ENV RANCHER_CLI_VERSION=v2.4.3
 ENV CHARTRELEASER_VERSION=0.1.2
 ENV TFLINT_VERSION="v0.23.1"
+ENV TFSEC_VERSION="v0.37.0"
 ARG GHR_VERSION=v0.13.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -43,6 +44,7 @@ ADD https://github.com/edaniszewski/chart-releaser/releases/download/${CHARTRELE
 # Add ghr github releaser
 ADD https://github.com/tcnksm/ghr/releases/download/${GHR_VERSION}/ghr_${GHR_VERSION}_linux_amd64.tar.gz /tmp
 ADD https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip /tmp
+ADD https://github.com/tfsec/tfsec/releases/download/${TFSEC_VERSION}/tfsec-linux-amd64 /tmp
 
 ENV HOME=/conf
 ENV CLOUDSDK_CONFIG=/localhost/.config/gcloud/
@@ -118,6 +120,7 @@ RUN adduser neo --home /conf -q \
     && install chart-releaser /usr/bin/chart-releaser \
     && install ghr_${GHR_VERSION}_linux_amd64/ghr /usr/bin/ghr \
     && install tflint /usr/bin/tflint \
+    && install tfsec-linux-amd64 /usr/bin/tfsec \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
