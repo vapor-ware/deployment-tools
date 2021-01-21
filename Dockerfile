@@ -7,14 +7,15 @@ FROM vaporio/foundation:latest
 ARG TF_SEMVER=0.12.29
 ENV TF_VERSION=${TF_SEMVER}_linux_amd64
 ENV CLOUD_SDK_VERSION=292.0.0
-ENV HELM_VERSION=v2.16.7
-ENV HELM3_VERSION=v3.3.0
+ENV HELM_VERSION=v2.17.0
+ENV HELM3_VERSION=v3.5.0
 ENV KUBECTL_VERSION=v1.18.2
 ENV HELMFILE_VERSION=v0.125.0
 ENV VELERO_VERSION=v1.3.2
 ENV SCTL_VERSION=1.4.2
 ENV RANCHER_CLI_VERSION=v2.4.3
 ENV CHARTRELEASER_VERSION=0.1.2
+ENV TFLINT_VERSION="v0.23.1"
 ARG GHR_VERSION=v0.13.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -41,10 +42,12 @@ ADD https://github.com/rancher/cli/releases/download/${RANCHER_CLI_VERSION}/ranc
 ADD https://github.com/edaniszewski/chart-releaser/releases/download/${CHARTRELEASER_VERSION}/chart-releaser_linux_amd64.tar.gz /tmp
 # Add ghr github releaser
 ADD https://github.com/tcnksm/ghr/releases/download/${GHR_VERSION}/ghr_${GHR_VERSION}_linux_amd64.tar.gz /tmp
+ADD https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip /tmp
 
 ENV HOME=/conf
 ENV CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 ENV GOOGLE_APPLICATION_CREDENTIALS=/localhost/.config/gcloud/application_default_credentials.json
+
 
 # Basics and system tools
 RUN apt-get update && \
@@ -66,6 +69,7 @@ RUN apt-get update && \
     python3-yaml \
     python3-click \
     python3-requests \
+    python3-pip \
     unzip \
     curl  \
     bash-completion \
@@ -103,6 +107,7 @@ RUN adduser neo --home /conf -q \
     && chmod 775 /etc/helm \
     && chgrp jenkins /etc/helm \
     && tar xzvf helm-${HELM3_VERSION}-linux-amd64.tar.gz -C helm3 \
+    && unzip -u /tmp/tflint_linux_amd64.zip -d /tmp/ \
     && install linux-amd64/helm /usr/bin/helm \
     && install helm3/linux-amd64/helm /usr/bin/helm3 \
     && install helmfile_linux_amd64 /usr/bin/helmfile \
@@ -112,6 +117,7 @@ RUN adduser neo --home /conf -q \
     && install rancher-${RANCHER_CLI_VERSION}/rancher /usr/bin/rancher \
     && install chart-releaser /usr/bin/chart-releaser \
     && install ghr_${GHR_VERSION}_linux_amd64/ghr /usr/bin/ghr \
+    && install tflint /usr/bin/tflint \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
