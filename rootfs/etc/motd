@@ -18,4 +18,3 @@ This will print out the build details by default. in order to launch a shell sim
 pass the shell as an argument.
 
     docker run -ti --rm -v $HOME:/localhost --privileged local/deployment-tools:latest -c /bin/bash
-

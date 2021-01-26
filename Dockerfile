@@ -17,6 +17,7 @@ ENV RANCHER_CLI_VERSION=v2.4.3
 ENV CHARTRELEASER_VERSION="v0.1.4"
 ENV TFLINT_VERSION="v0.23.1"
 ENV TFSEC_VERSION="v0.37.0"
+ENV KUBELINT_VERSION="0.1.6"
 ARG GHR_VERSION=v0.13.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -43,8 +44,13 @@ ADD https://github.com/rancher/cli/releases/download/${RANCHER_CLI_VERSION}/ranc
 ADD https://github.com/edaniszewski/chart-releaser/releases/download/${CHARTRELEASER_VERSION}/chart-releaser_linux_amd64.tar.gz /tmp
 # Add ghr github releaser
 ADD https://github.com/tcnksm/ghr/releases/download/${GHR_VERSION}/ghr_${GHR_VERSION}_linux_amd64.tar.gz /tmp
+# Add tflint
 ADD https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip /tmp
+# Add TFSec
 ADD https://github.com/tfsec/tfsec/releases/download/${TFSEC_VERSION}/tfsec-linux-amd64 /tmp
+# Add kubelint
+ADD https://github.com/stackrox/kube-linter/releases/download/${KUBELINT_VERSION}/kube-linter-linux.tar.gz /tmp
+
 
 ENV HOME=/conf
 ENV CLOUDSDK_CONFIG=/localhost/.config/gcloud/
@@ -110,6 +116,7 @@ RUN adduser neo --home /conf -q \
     && chgrp jenkins /etc/helm \
     && tar xzvf helm-${HELM3_VERSION}-linux-amd64.tar.gz -C helm3 \
     && unzip -u /tmp/tflint_linux_amd64.zip -d /tmp/ \
+    && tar xzvf kube-linter-linux.tar.gz \
     && install linux-amd64/helm /usr/bin/helm \
     && install helm3/linux-amd64/helm /usr/bin/helm3 \
     && install helmfile_linux_amd64 /usr/bin/helmfile \
@@ -121,6 +128,7 @@ RUN adduser neo --home /conf -q \
     && install ghr_${GHR_VERSION}_linux_amd64/ghr /usr/bin/ghr \
     && install tflint /usr/bin/tflint \
     && install tfsec-linux-amd64 /usr/bin/tfsec \
+    && install kube-linter /usr/bin/kube-linter \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
