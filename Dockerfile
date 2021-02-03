@@ -4,8 +4,10 @@ FROM vaporio/foundation:latest
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
 #
 
-ARG TF_SEMVER=0.12.29
-ENV TF_VERSION=${TF_SEMVER}_linux_amd64
+
+ENV NEEDED_TERRAFORM_VERSIONS="0.12.29 0.13.6 0.14.3"
+ENV DEFAULT_TERRAFORM_VERSION=0.12.29
+
 ENV CLOUD_SDK_VERSION=292.0.0
 ENV HELM_VERSION=v2.17.0
 ENV HELM3_VERSION=v3.5.0
@@ -22,8 +24,6 @@ ARG GHR_VERSION=v0.13.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-# Add terraform
-ADD https://releases.hashicorp.com/terraform/${TF_SEMVER}/terraform_${TF_VERSION}.zip /tmp
 # Add google cloud sdk
 ADD https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz /tmp
 # Add helm
@@ -84,11 +84,31 @@ RUN apt-get update && \
     direnv \
     rsync \
     wget \
-# Install the GCS Fuse package to mount remote storage
+    # Install the GCS Fuse package to mount remote storage
     && echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
     && apt-get update && apt-get install -y gcsfuse \
     && rm -rf /var/lib/apt/lists/*
+
+# During transitionary releases of terraform we need multiple versions available to
+# provide functionality during execution contexts. This will be required for
+# ci-shared/1.2.0+ for deployment-tools based pipelines.
+RUN AVAILABLE_TERRAFORM_VERSIONS="${NEEDED_TERRAFORM_VERSIONS}" && \
+    rm -f /usr/local/bin/terraform && \
+    for VERSION in ${AVAILABLE_TERRAFORM_VERSIONS}; do \
+    curl -LOs https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip && \
+    curl -LOs https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_SHA256SUMS && \
+    sed -n "/terraform_${VERSION}_linux_amd64.zip/p" terraform_${VERSION}_SHA256SUMS | sha256sum -c && \
+    mkdir -p /usr/local/bin/tf/versions/${VERSION} && \
+    unzip -o terraform_${VERSION}_linux_amd64.zip -d /usr/local/bin/tf/versions/${VERSION} && \
+    ln -fs /usr/local/bin/tf/versions/${VERSION}/terraform /usr/local/bin/terraform${VERSION} && \
+    rm terraform_${VERSION}_linux_amd64.zip && \
+    rm terraform_${VERSION}_SHA256SUMS; \
+    done && \
+    ln -s /usr/local/bin/tf/versions/${DEFAULT_TERRAFORM_VERSION}/terraform /usr/local/bin/terraform
+
+
+
 
 COPY rootfs/etc/skel/bashrc /etc/skel/.bashrc
 # Additional utility tooling
@@ -97,8 +117,6 @@ WORKDIR /tmp
 RUN adduser neo --home /conf -q \
     && adduser jenkins --home /home/jenkins -q \
     && usermod -aG jenkins neo \
-    && unzip terraform_${TF_VERSION}.zip \
-    && install terraform /usr/bin/terraform \
     && tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
     && rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
     && tar xzvf velero-${VELERO_VERSION}-linux-amd64.tar.gz \
