@@ -20,6 +20,7 @@ ENV CHARTRELEASER_VERSION="v0.1.4"
 ENV TFLINT_VERSION="v0.23.1"
 ENV TFSEC_VERSION="v0.37.0"
 ENV KUBELINT_VERSION="0.1.6"
+ENV KUBEVAL_VERSION="0.15.0"
 ARG GHR_VERSION=v0.13.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -50,6 +51,8 @@ ADD https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSI
 ADD https://github.com/tfsec/tfsec/releases/download/${TFSEC_VERSION}/tfsec-linux-amd64 /tmp
 # Add kubelint
 ADD https://github.com/stackrox/kube-linter/releases/download/${KUBELINT_VERSION}/kube-linter-linux.tar.gz /tmp
+# Add kubeval
+ADD https://github.com/instrumenta/kubeval/releases/download/${KUBEVAL_VERSION}/kubeval-linux-amd64.tar.gz /tmp
 
 
 ENV HOME=/conf
@@ -135,6 +138,7 @@ RUN adduser neo --home /conf -q \
     && tar xzvf helm-${HELM3_VERSION}-linux-amd64.tar.gz -C helm3 \
     && unzip -u /tmp/tflint_linux_amd64.zip -d /tmp/ \
     && tar xzvf kube-linter-linux.tar.gz \
+    && tar xzvf kubeval-linux-amd64.tar.gz \
     && install linux-amd64/helm /usr/bin/helm \
     && install helm3/linux-amd64/helm /usr/bin/helm3 \
     && install helmfile_linux_amd64 /usr/bin/helmfile \
@@ -147,6 +151,7 @@ RUN adduser neo --home /conf -q \
     && install tflint /usr/bin/tflint \
     && install tfsec-linux-amd64 /usr/bin/tfsec \
     && install kube-linter /usr/bin/kube-linter \
+    && install kubeval /usr/bin/kubeval \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
