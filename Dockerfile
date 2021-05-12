@@ -144,8 +144,8 @@ RUN adduser neo --home /conf -q \
     && tar xzvf kube-linter-linux.tar.gz \
     && tar xzvf kubeval-linux-amd64.tar.gz \
     && tar xzvf kubeconform-linux-amd64.tar.gz \
-    && install linux-amd64/helm /usr/bin/helm \
-    && install helm3/linux-amd64/helm /usr/bin/helm3 \
+    && install linux-amd64/helm /usr/bin/helm2 \
+    && install helm3/linux-amd64/helm /usr/bin/helm \
     && install helmfile_linux_amd64 /usr/bin/helmfile \
     && install kubectl /usr/bin/kubectl \
     && install velero /usr/bin/velero \
@@ -161,7 +161,8 @@ RUN adduser neo --home /conf -q \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
-    && ln -s /google-cloud-sdk/bin/bq /usr/local/bin/bq
+    && ln -s /google-cloud-sdk/bin/bq /usr/local/bin/bq \
+    && ln -s /usr/bin/helm /usr/bin/helm3
 # ln -s /usr/local/google-cloud-sdk/completion.bash.inc /etc/bash_completion.d/gcloud.sh && \
 
 RUN kubectl completion bash > /etc/bash_completion.d/kubectl.sh
@@ -175,18 +176,18 @@ ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSI
 
 ENV HELM_DIFF_VERSION 2.11.0+5
 
-RUN helm init --client-only \
-    && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
-    && helm3 plugin install https://github.com/databus23/helm-diff
+RUN helm2 init --client-only \
+    && helm2 plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
+    && helm plugin install https://github.com/databus23/helm-diff
 
 #
 # Init Helm for CI deployment-runner
 #
 ENV HOME=/home/jenkins
 RUN mkdir -p /home/jenkins/agent-workspace \
-    && helm init --client-only \
-    && helm plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
-    && helm3 plugin install https://github.com/databus23/helm-diff
+    && helm2 init --client-only \
+    && helm2 plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
+    && helm plugin install https://github.com/databus23/helm-diff
 
 #
 # Install fancy Kube PS1 Prompt
