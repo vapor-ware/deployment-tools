@@ -80,6 +80,7 @@ RUN apt-get update && \
     pwgen \
     sshpass \
     gpg-agent \
+    netcat-openbsd \
     python \
     python3-yaml \
     python3-click \
@@ -88,6 +89,7 @@ RUN apt-get update && \
     unzip \
     curl  \
     bash-completion \
+    telnet \
     direnv \
     rsync \
     wget \
