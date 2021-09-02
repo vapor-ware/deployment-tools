@@ -34,6 +34,7 @@ Remote Filesystems
 Nice to haves
 
 - KTX
+- df-pv (disk free)
 
 ## Usage
 
