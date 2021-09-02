@@ -23,6 +23,7 @@ ENV KUBELINT_VERSION="0.1.6"
 ENV KUBECONFORM_VERSION="v0.4.7"
 # TODO (etd): deprecate - migrated to kubeconform
 ENV KUBEVAL_VERSION="0.15.0"
+ENV DF_PV_VERSION v0.3.0
 ARG GHR_VERSION=v0.13.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -30,7 +31,7 @@ ENV LANG=C.UTF-8
 # Add google cloud sdk
 ADD https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz /tmp
 # Add helm
-ADD https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz /tmp
+ADD https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz /tmp
 # Add helm3
 ADD https://get.helm.sh/helm-${HELM3_VERSION}-linux-amd64.tar.gz /tmp
 # Add kubectl
@@ -57,6 +58,8 @@ ADD https://github.com/stackrox/kube-linter/releases/download/${KUBELINT_VERSION
 ADD https://github.com/instrumenta/kubeval/releases/download/${KUBEVAL_VERSION}/kubeval-linux-amd64.tar.gz /tmp
 # Add kubeconform
 ADD https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz /tmp
+# Add df-pv
+ADD https://github.com/yashbhutwala/kubectl-df-pv/releases/download/${DF_PV_VERSION}/kubectl-df-pv_${DF_PV_VERSION}_linux_amd64.tar.gz /tmp
 
 
 ENV HOME=/conf
@@ -135,6 +138,7 @@ RUN adduser neo --home /conf -q \
     && tar xzvf rancher-linux-amd64-${RANCHER_CLI_VERSION}.tar.gz \
     && tar xzvf chart-releaser_linux_amd64.tar.gz \
     && tar xzvf ghr_${GHR_VERSION}_linux_amd64.tar.gz \
+    && tar xzvf kubectl-df-pv_${HELM_DF_PV_VERSION}_linux_amd64.tar.gz \
     && ln -s /lib /lib64 \
     && mv google-cloud-sdk /google-cloud-sdk \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
@@ -160,6 +164,7 @@ RUN adduser neo --home /conf -q \
     && install kube-linter /usr/bin/kube-linter \
     && install kubeval /usr/bin/kubeval \
     && install kubeconform /usr/bin/kubeconform \
+    && install df-pv /usr/bin/df-pv \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
