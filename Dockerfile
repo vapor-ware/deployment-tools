@@ -138,7 +138,7 @@ RUN adduser neo --home /conf -q \
     && tar xzvf rancher-linux-amd64-${RANCHER_CLI_VERSION}.tar.gz \
     && tar xzvf chart-releaser_linux_amd64.tar.gz \
     && tar xzvf ghr_${GHR_VERSION}_linux_amd64.tar.gz \
-    && tar xzvf kubectl-df-pv_${HELM_DF_PV_VERSION}_linux_amd64.tar.gz \
+    && tar xzvf kubectl-df-pv_${DF_PV_VERSION}_linux_amd64.tar.gz \
     && ln -s /lib /lib64 \
     && mv google-cloud-sdk /google-cloud-sdk \
     && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
