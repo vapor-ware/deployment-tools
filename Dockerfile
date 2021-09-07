@@ -5,11 +5,12 @@ FROM vaporio/foundation:latest
 #
 
 
-ENV NEEDED_TERRAFORM_VERSIONS="0.13.6 0.14.3 0.14.10"
+ENV NEEDED_TERRAFORM_VERSIONS="0.14.3 0.14.10"
 ENV DEFAULT_TERRAFORM_VERSION=0.14.10
 
+ENV CLAIRCTL_VERSION=v1.2.8
 ENV CLOUD_SDK_VERSION=342.0.0
-ENV HELM_VERSION=v2.17.0
+# ENV HELM_VERSION=v2.17.0
 ENV HELM3_VERSION=v3.6.0
 ENV KUBECTL_VERSION=v1.21.1
 ENV HELMFILE_VERSION=v0.139.7
@@ -31,7 +32,7 @@ ENV LANG=C.UTF-8
 # Add google cloud sdk
 ADD https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz /tmp
 # Add helm
-ADD https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz /tmp
+# ADD https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz /tmp
 # Add helm3
 ADD https://get.helm.sh/helm-${HELM3_VERSION}-linux-amd64.tar.gz /tmp
 # Add kubectl
@@ -60,6 +61,8 @@ ADD https://github.com/instrumenta/kubeval/releases/download/${KUBEVAL_VERSION}/
 ADD https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz /tmp
 # Add df-pv
 ADD https://github.com/yashbhutwala/kubectl-df-pv/releases/download/${DF_PV_VERSION}/kubectl-df-pv_${DF_PV_VERSION}_linux_amd64.tar.gz /tmp
+# Add Clairctl
+ADD https://github.com/jgsqware/clairctl/releases/download/${CLAIRCTL_VERSION}/clairctl-linux-amd64 /tmp
 
 
 ENV HOME=/conf
@@ -141,7 +144,7 @@ RUN adduser neo --home /conf -q \
     && tar xzvf kubectl-df-pv_${DF_PV_VERSION}_linux_amd64.tar.gz \
     && ln -s /lib /lib64 \
     && mv google-cloud-sdk /google-cloud-sdk \
-    && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
+    # && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && mkdir -p helm3 /etc/helm \
     && chmod 775 /etc/helm \
     && chgrp jenkins /etc/helm \
@@ -150,7 +153,7 @@ RUN adduser neo --home /conf -q \
     && tar xzvf kube-linter-linux.tar.gz \
     && tar xzvf kubeval-linux-amd64.tar.gz \
     && tar xzvf kubeconform-linux-amd64.tar.gz \
-    && install linux-amd64/helm /usr/bin/helm2 \
+    # && install linux-amd64/helm /usr/bin/helm2 \
     && install helm3/linux-amd64/helm /usr/bin/helm \
     && install helmfile_linux_amd64 /usr/bin/helmfile \
     && install kubectl /usr/bin/kubectl \
@@ -165,6 +168,7 @@ RUN adduser neo --home /conf -q \
     && install kubeval /usr/bin/kubeval \
     && install kubeconform /usr/bin/kubeconform \
     && install df-pv /usr/bin/df-pv \
+    && install clairctl-linux-amd64 /usr/local/bin/clairctl \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
@@ -183,17 +187,17 @@ ADD https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_COMPLETION_VERSI
 
 ENV HELM_DIFF_VERSION 2.11.0+5
 
-RUN helm2 init --client-only \
-    && helm2 plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
-    && helm plugin install https://github.com/databus23/helm-diff
+# RUN helm2 init --client-only \
+#     && helm2 plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
+RUN helm plugin install https://github.com/databus23/helm-diff
 
 #
 # Init Helm for CI deployment-runner
 #
 ENV HOME=/home/jenkins
 RUN mkdir -p /home/jenkins/agent-workspace \
-    && helm2 init --client-only \
-    && helm2 plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
+    # && helm2 init --client-only \
+    # && helm2 plugin install https://github.com/databus23/helm-diff --version v${HELM_DIFF_VERSION} \
     && helm plugin install https://github.com/databus23/helm-diff
 
 #
@@ -228,8 +232,8 @@ ENV XDG_CONFIG_HOME=/etc
 RUN find ${XDG_CONFIG_HOME} -type f -name '*.sh' -exec chmod 755 {} \; \
     && chown -R neo:jenkins /home/jenkins \
     && chown -R neo /conf \
-    && chgrp -R 117 /conf/.helm \
-    && chmod -R 775 /conf/.helm \
+    # && chgrp -R 117 /conf/.helm \
+    # && chmod -R 775 /conf/.helm \
     && chmod -R 777 /localhost \
     && rm -rf /tmp/* \
     && chmod 777 /tmp
