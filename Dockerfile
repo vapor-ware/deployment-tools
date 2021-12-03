@@ -1,4 +1,4 @@
-FROM vaporio/foundation:latest
+FROM docker.io/vaporio/foundation:latest
 
 # usage:
 # docker run --rm -ti -v $HOME:/localhost deployment-tools
@@ -61,8 +61,6 @@ ADD https://github.com/instrumenta/kubeval/releases/download/${KUBEVAL_VERSION}/
 ADD https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz /tmp
 # Add df-pv
 ADD https://github.com/yashbhutwala/kubectl-df-pv/releases/download/${DF_PV_VERSION}/kubectl-df-pv_${DF_PV_VERSION}_linux_amd64.tar.gz /tmp
-# Add Clairctl
-ADD https://github.com/jgsqware/clairctl/releases/download/${CLAIRCTL_VERSION}/clairctl-linux-amd64 /tmp
 
 
 ENV HOME=/conf
