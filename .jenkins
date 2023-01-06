@@ -1,5 +1,5 @@
 // Include this shared CI repository to load script helpers and libraries.
-library identifier: 'vapor@1.18.0', retriever: modernSCM(
+library identifier: 'vapor@develop', retriever: modernSCM(
         [$class: 'GitSCMSource',
         remote: 'https://github.com/vapor-ware/ci-shared.git',
         credentialsId: 'vio-bot-gh'])
@@ -7,5 +7,6 @@ library identifier: 'vapor@1.18.0', retriever: modernSCM(
 dockerBuildPipeline([
     "image": "vaporio/deployment-tools",
     "publishLatest": true,
+    "skipClair": true,
 ])
 
