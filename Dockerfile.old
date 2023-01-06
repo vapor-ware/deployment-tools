@@ -1,8 +1,16 @@
-FROM docker.io/google/cloud-sdk:slim
+FROM docker.io/vaporio/foundation:latest
+
+# usage:
+# docker run --rm -ti -v $HOME:/localhost deployment-tools
+#
+
 
 ENV NEEDED_TERRAFORM_VERSIONS="0.14.3 0.14.10"
 ENV DEFAULT_TERRAFORM_VERSION=0.14.10
 
+ENV CLAIRCTL_VERSION=v1.2.8
+ENV CLOUD_SDK_VERSION=342.0.0
+# ENV HELM_VERSION=v2.17.0
 ENV HELM3_VERSION=v3.6.0
 ENV KUBECTL_VERSION=v1.21.1
 ENV HELMFILE_VERSION=v0.139.7
@@ -21,6 +29,10 @@ ARG GHR_VERSION=v0.13.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
+# Add google cloud sdk
+ADD https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz /tmp
+# Add helm
+# ADD https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz /tmp
 # Add helm3
 ADD https://get.helm.sh/helm-${HELM3_VERSION}-linux-amd64.tar.gz /tmp
 # Add kubectl
@@ -50,13 +62,14 @@ ADD https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION
 # Add df-pv
 ADD https://github.com/yashbhutwala/kubectl-df-pv/releases/download/${DF_PV_VERSION}/kubectl-df-pv_${DF_PV_VERSION}_linux_amd64.tar.gz /tmp
 
+
 ENV HOME=/conf
 ENV CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 ENV GOOGLE_APPLICATION_CREDENTIALS=/localhost/.config/gcloud/application_default_credentials.json
 
+
 # Basics and system tools
 RUN apt-get update && \
-    apt-get install -y apt-utils && \
     apt-get install -y \
     byobu \
     openssl \
@@ -106,6 +119,9 @@ RUN AVAILABLE_TERRAFORM_VERSIONS="${NEEDED_TERRAFORM_VERSIONS}" && \
     rm terraform_${VERSION}_SHA256SUMS; \
     done && \
     ln -s /usr/local/bin/tf/versions/${DEFAULT_TERRAFORM_VERSION}/terraform /usr/local/bin/terraform
+
+
+
 
 COPY rootfs/etc/skel/bashrc /etc/skel/.bashrc
 # Additional utility tooling
