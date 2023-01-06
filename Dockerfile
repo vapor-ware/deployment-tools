@@ -166,7 +166,7 @@ RUN adduser neo --home /conf -q \
     && install kubeval /usr/bin/kubeval \
     && install kubeconform /usr/bin/kubeconform \
     && install df-pv /usr/bin/df-pv \
-    && install clairctl-linux-amd64 /usr/local/bin/clairctl \
+    ## && install clairctl-linux-amd64 /usr/local/bin/clairctl \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
