@@ -8,8 +8,7 @@ FROM docker.io/vaporio/foundation:latest
 ENV NEEDED_TERRAFORM_VERSIONS="0.14.3 0.14.10"
 ENV DEFAULT_TERRAFORM_VERSION=0.14.10
 
-ENV CLAIRCTL_VERSION=v1.2.8
-ENV CLOUD_SDK_VERSION=342.0.0
+ENV CLOUD_SDK_VERSION=420.0.0
 ENV HELM3_VERSION=v3.6.0
 ENV KUBECTL_VERSION=v1.21.1
 ENV HELMFILE_VERSION=v0.139.7
@@ -96,6 +95,7 @@ RUN apt-get update && \
     direnv \
     rsync \
     wget \
+    software-properties-common \
     # Install the GCS Fuse package to mount remote storage
     && echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
@@ -141,7 +141,6 @@ RUN adduser neo --home /conf -q --disabled-password \
     && tar xzvf kubectl-df-pv_${DF_PV_VERSION}_linux_amd64.tar.gz \
     && ln -s /lib /lib64 \
     && mv google-cloud-sdk /google-cloud-sdk \
-    # && tar xzvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && mkdir -p helm3 /etc/helm \
     && chmod 775 /etc/helm \
     && chgrp jenkins /etc/helm \
@@ -150,7 +149,6 @@ RUN adduser neo --home /conf -q --disabled-password \
     && tar xzvf kube-linter-linux.tar.gz \
     && tar xzvf kubeval-linux-amd64.tar.gz \
     && tar xzvf kubeconform-linux-amd64.tar.gz \
-    # && install linux-amd64/helm /usr/bin/helm2 \
     && install helm3/linux-amd64/helm /usr/bin/helm \
     && install helmfile_linux_amd64 /usr/bin/helmfile \
     && install kubectl /usr/bin/kubectl \
@@ -165,7 +163,6 @@ RUN adduser neo --home /conf -q --disabled-password \
     && install kubeval /usr/bin/kubeval \
     && install kubeconform /usr/bin/kubeconform \
     && install df-pv /usr/bin/df-pv \
-    ## && install clairctl-linux-amd64 /usr/local/bin/clairctl \
     && rm -rf /tmp/* /var/lib/apt/cache/* \
     && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud  \
     && ln -s /google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil  \
@@ -207,7 +204,8 @@ ADD https://raw.githubusercontent.com/jonmosco/kube-ps1/${KUBE_PS1_VERSION}/kube
 #Tune gcloud
 RUN gcloud config set core/disable_usage_reporting true --installation && \
     gcloud config set component_manager/disable_update_check true --installation && \
-    gcloud config set metrics/environment github_docker_image --installation
+    gcloud config set metrics/environment github_docker_image --installation && \
+    gcloud components install gke-gcloud-auth-plugin
 
 #
 # Shell
@@ -217,6 +215,8 @@ ENV HISTFILE=${CACHE_PATH}/history
 ENV SHELL=/bin/bash
 ENV LESS=-Xr
 ENV SSH_AGENT_CONFIG=/var/tmp/.ssh-agent
+ENV USE_GKE_GCLOUD_AUTH_PLUGIN=True
+ENV PATH=${PATH}:/google-cloud-sdk/bin
 
 
 # This is not a "multi-user" system, so we'll use `/etc` as the global configuration dir
