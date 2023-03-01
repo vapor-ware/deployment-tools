@@ -8,7 +8,7 @@ FROM docker.io/vaporio/foundation:latest
 ENV NEEDED_TERRAFORM_VERSIONS="0.14.3 0.14.10"
 ENV DEFAULT_TERRAFORM_VERSION=0.14.10
 
-ENV CLOUD_SDK_VERSION=404.0.0
+ENV CLOUD_SDK_VERSION=420.0.0
 ENV HELM3_VERSION=v3.6.0
 ENV KUBECTL_VERSION=v1.21.1
 ENV HELMFILE_VERSION=v0.139.7
@@ -205,8 +205,7 @@ ADD https://raw.githubusercontent.com/jonmosco/kube-ps1/${KUBE_PS1_VERSION}/kube
 RUN gcloud config set core/disable_usage_reporting true --installation && \
     gcloud config set component_manager/disable_update_check true --installation && \
     gcloud config set metrics/environment github_docker_image --installation && \
-    gcloud components install gke-gcloud-auth-plugin && \
-    gcloud components update
+    gcloud components install gke-gcloud-auth-plugin
 
 #
 # Shell
