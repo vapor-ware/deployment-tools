@@ -202,11 +202,11 @@ ENV KUBE_PS1_VERSION v0.7.0
 ADD https://raw.githubusercontent.com/jonmosco/kube-ps1/${KUBE_PS1_VERSION}/kube-ps1.sh /etc/profile.d/kube-ps1.sh
 
 #Tune gcloud
-RUN gcloud components update && \
-    gcloud components install gke-gcloud-auth-plugin && \
-    gcloud config set core/disable_usage_reporting true --installation && \
+RUN gcloud config set core/disable_usage_reporting true --installation && \
     gcloud config set component_manager/disable_update_check true --installation && \
-    gcloud config set metrics/environment github_docker_image --installation
+    gcloud config set metrics/environment github_docker_image --installation && \
+    gcloud components install gke-gcloud-auth-plugin && \
+    gcloud components update
 
 #
 # Shell
